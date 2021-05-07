@@ -60,6 +60,7 @@ module "AWS_EC2_windows" {
   security_groups = [module.AWS_VPC.security_group_id]
   tags = {}
   depends_on = [module.AWS_VPC.security_group_id]
+  user_data = templatefile("./modules/aws/ec2/instance/user_data/linux.sh",{} )
 }
 module "AWS_EC2_linux" {
   source = "./modules/aws/ec2/instance"
@@ -70,14 +71,13 @@ module "AWS_EC2_linux" {
   security_groups = [module.AWS_VPC.security_group_id]
   tags = {}
   depends_on = [module.AWS_VPC.security_group_id]
-  user_data = templatefile("./modules/aws/ec2/instance/templates/linux.sh",{} )
+  user_data = templatefile("./modules/aws/ec2/instance/user_data/linux.sh",{} )
 }
-module "AWS_EC2_alb" {
-  source = "modules\/aws\/ec2\/elb"
+module "AWS_EC2_elb" {
+  source = "./modules/aws/ec2/elb"
   security_groups = [module.AWS_VPC.security_group_id]
-  subnets = data.aws_subnet_ids.default.ids
   tags = {}
-  target_ids = concat (
+  instances = concat (
     tolist([ for instance in module.AWS_EC2_windows.instances: instance.id]),
     tolist([ for instance in module.AWS_EC2_linux.instances: instance.id])
   )
