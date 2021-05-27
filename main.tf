@@ -47,7 +47,7 @@ data "aws_subnet_ids" "default"{
 }
 
 module "AWS_VPC" {
-  source = "./modules/vpc/security_group"
+  source = "./modules/aws/vpc/security_group"
   tags = {}
 }
 
