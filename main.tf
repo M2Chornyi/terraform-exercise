@@ -14,7 +14,6 @@ terraform {
 }
 provider "aws" {
   region = "us-east-1"
-  profile = "tf-gd"
 }
 data "aws_ami" "windows_2016" {
   most_recent = true
