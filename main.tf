@@ -14,6 +14,7 @@ terraform {
 }
 provider "aws" {
   region = "us-east-1"
+  profile = "tf-gd"
 }
 data "aws_ami" "windows_2016" {
   most_recent = true
@@ -47,7 +48,7 @@ data "aws_subnet_ids" "default"{
 }
 
 module "AWS_VPC" {
-  source = "./modules/aws/vpc/security_group"
+  source = "./modules/vpc/security_group"
   tags = {}
 }
 
@@ -60,7 +61,7 @@ module "AWS_EC2_windows" {
   security_groups = [module.AWS_VPC.security_group_id]
   tags = {}
   depends_on = [module.AWS_VPC.security_group_id]
-  user_data = templatefile("./modules/aws/ec2/instance/user_data/linux.sh",{} )
+  user_data = templatefile("./modules/aws/ec2/instance/user_data/windows.ps1",{} )
 }
 module "AWS_EC2_linux" {
   source = "./modules/aws/ec2/instance"
